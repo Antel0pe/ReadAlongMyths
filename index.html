@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map with Pins and Extending Path</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map { height: 400px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <button id="addPin">Add Next Pin</button>
+
+    <script>
+        // Sample JSON data (you can replace this with your actual data)
+        const jsonData = [
+            { name: "Troy", location: [39.957, 26.238] },
+            { name: "Sparta", location: [37.074, 22.430] },
+            { name: "Athens", location: [37.984, 23.728] },
+            { name: "Ithaca", location: [38.363, 20.710] }
+        ];
+
+        // Initialize the map
+        const map = L.map('map').setView([38, 24], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        let currentIndex = 0;
+        let path = null;
+
+        document.getElementById('addPin').addEventListener('click', addNextPin);
+
+        function addNextPin() {
+            if (currentIndex >= jsonData.length) {
+                alert("All pins have been added!");
+                return;
+            }
+
+            const item = jsonData[currentIndex];
+            const marker = L.marker(item.location).addTo(map)
+                .bindPopup(item.name)
+                .openPopup();
+
+            if (path === null) {
+                // Create the initial path
+                path = L.polyline([item.location], {color: 'red'}).addTo(map);
+            } else {
+                // Extend the existing path
+                path.addLatLng(item.location);
+            }
+
+            currentIndex++;
+
+            // Adjust map view to include all pins
+            map.fitBounds(path.getBounds());
+        }
+    </script>
+</body>
+</html>

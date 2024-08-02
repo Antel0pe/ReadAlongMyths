@@ -1,0 +1,20 @@
+[
+    {
+        "entity": "michael",
+        "place": "paris, france",
+        "date": "1944",
+        "action": "michael ate a pizza"
+    },
+    {
+        "entity": "duncan",
+        "place": "rome, italy",
+        "date": "1934",
+        "action": "duncan invented pizza"
+    },
+    {
+        "entity": "paul",
+        "place": "london, england",
+        "date": "1951",
+        "action": "paul found pizza"
+    }
+]
