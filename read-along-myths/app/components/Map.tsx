@@ -1,5 +1,5 @@
-import { LatLngExpression, MapOptions } from "leaflet"
-import { MapContainer, Marker, TileLayer, Tooltip, Popup } from "react-leaflet"
+import { LatLngExpression, MapOptions } from "leaflet";
+import { MapContainer, Marker, TileLayer, Tooltip, Popup } from "react-leaflet";
 
 export default function Map() {
     const position: LatLngExpression = [51.505, -0.09];
