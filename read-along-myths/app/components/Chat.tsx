@@ -12,22 +12,25 @@ export default function Chat( { setClickedChatItem }: Props ) {
     const [msgs, setMsgs] = useState<GraphItem[]>([]);
     const [optionItems, setOptionItems] = useState<GraphItem[]>([]);
 
+    // get 1st msg in chat on load
     useEffect(() => {
         setMsgs([getNextChatItem(null)]);
     }, [])
 
+    // get next option items when new msg is seen
     useEffect(() => {
         setOptionItems(getNextOptionItems(msgs[msgs.length-1]));
-    }, [setMsgs])
+    }, [msgs])
 
     function handleClickedChatItem(i: number) {
         setClickedChatItem(msgs[i]);
     }
 
     function msgFrag(msg: string, i: number): JSX.Element{
+        // FIX KEY
         return (
             <div className="w-full">
-                <p>msg <a href="#" onClick={() => handleClickedChatItem(i)} className="text-green-300 ">{msg}</a> ...</p>
+                <p key={i} >msg <a href="#" onClick={() => handleClickedChatItem(i)} className="text-green-300 ">{msg}</a> ...</p>
             </div>
         )
     }
@@ -51,7 +54,8 @@ export default function Chat( { setClickedChatItem }: Props ) {
             <div className="w-full flex flex-row">
                 {optionItems.length !== 0 && 
                     optionItems.map((o, i) => {
-                        return <button className={"border-2 basis-1/3"} onClick={() => addMsg(i)}>{ o.blurb }</button>
+                        // FIX KEY
+                        return <button key={i} className={"border-2 basis-1/3"} onClick={() => addMsg(i)}>{ o.blurb }</button>
                     })
                 }
             </div>

@@ -21,8 +21,9 @@ export default function ConnectionsPanel({ clickedChatItem }: Props) {
                     <br/>
                     <h4>Related Entities </h4>
                     <li>
-                        {getRelatedEntities(clickedChatItem.entity).map((e) => {
-                            return <ul>{e}</ul>
+                    {getRelatedEntities(clickedChatItem.entity).map((e, i) => {
+                            // FIX KEY
+                            return <ul key={i}>{e}</ul>
                         })}
                     </li>
                 </>
