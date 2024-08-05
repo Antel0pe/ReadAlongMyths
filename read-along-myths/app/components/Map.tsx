@@ -32,7 +32,7 @@ export default function Map({ eventLocations }: Props) {
             {eventLocations.map((loc, i) => {
                 let pos: LatLngExpression = [loc.lat, loc.long];
 
-                return <Marker position={pos}>
+                return <Marker key={i} position={pos}>
                     <Popup>{loc.date}</Popup>
                 </Marker>
             })}
