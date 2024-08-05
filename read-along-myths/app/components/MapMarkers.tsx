@@ -14,8 +14,6 @@ export default function MapMarkers({ eventLocations }: Props) {
     useEffect(() => {
         if (eventLocations.length === 0) return;
 
-        console.log('moving map for newest marker');
-
         let lastEventLocation = eventLocations[eventLocations.length - 1];
         map.flyTo(new LatLng(lastEventLocation.lat, lastEventLocation.long));
 

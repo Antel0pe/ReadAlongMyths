@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
     return await axios.get('https://us1.locationiq.com/v1/search',
         { params: params }
     ).then((r) => {
-        console.log('returning ' + JSON.stringify(r.data[0]));
         let res = { lat: r.data[0].lat, long: r.data[0].lon };
         return new NextResponse(JSON.stringify(res));
     }).catch((e) => {

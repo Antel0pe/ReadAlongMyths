@@ -51,7 +51,6 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
                 method: 'GET',
             }).then((res) => {
                 res.json().then((r) => {
-                    console.log('received ' + JSON.stringify(r));
                     setEventLocations([...eventLocations, { lat: r.lat, long: r.long, date: lastMsg.date }]);
                 })
             }).catch((e) => {
@@ -118,7 +117,6 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
                 res.text().then((msg) => {
                     console.log(msg);
                     let graphItemMsg = openAIFormatToGraphItem(msg);
-                    console.log(graphItemMsg.place);
                     setMsgs([...msgs, graphItemMsg]);
                 });
 
