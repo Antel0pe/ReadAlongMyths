@@ -92,9 +92,11 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     }
 
     function msgFrag(msg: GraphItem, i: number): JSX.Element{
+        let backgroundColor = i % 2 === 0 ? 'bg-green-600 ' : 'bg-orange-700';
+        
         // FIX KEY
         return (
-            <div className="w-full">
+            <div className={"w-full " + backgroundColor }>
                 <p key={i} >[({msg.date}, {msg.place}) <a href="#" onClick={() => handleClickedChatItem(i)} className="text-white">{msg.blurb}</a> ]</p>
             </div>
         )
