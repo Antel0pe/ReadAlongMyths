@@ -1,5 +1,5 @@
-import { getRelatedEntities } from "../KnowledgeGraphController"
-import { GraphItem } from "../KnowledgeGraphItem"
+import { getRelatedEntities } from "../utils/KnowledgeGraphController"
+import { GraphItem } from "../utils/KnowledgeGraphItem"
 
 
 type Props = {

@@ -1,14 +1,17 @@
 'use client';
 
 import { Dispatch, MouseEventHandler, ReactElement, ReactFragment, useEffect, useState } from "react";
-import { GraphItem, graphItemToOpenAIFormat, openAIFormatToGraphItem } from "../KnowledgeGraphItem";
-import { getNextChatItem, getNextOptionItems } from "../KnowledgeGraphController";
+import { GraphItem, graphItemToOpenAIFormat, openAIFormatToGraphItem } from "../utils/KnowledgeGraphItem";
+import { getNextChatItem, getNextOptionItems } from "../utils/KnowledgeGraphController";
+import { EventLocation } from "../utils/EventLocation";
 
 type Props = {
-    setClickedChatItem : Dispatch<GraphItem>,
+    setClickedChatItem: Dispatch<GraphItem>,
+    eventLocations: EventLocation[],
+    setEventLocations: Dispatch<EventLocation[]>,
 }
 
-export default function Chat( { setClickedChatItem }: Props ) {
+export default function Chat( { setClickedChatItem, eventLocations, setEventLocations }: Props ) {
     const [msgs, setMsgs] = useState<GraphItem[]>([]);
     const [optionItems, setOptionItems] = useState<GraphItem[]>([]);
 
@@ -31,6 +34,27 @@ export default function Chat( { setClickedChatItem }: Props ) {
 
     }, [JSON.stringify(msgs)])
 
+    // update array of locations everytime msgs are updated
+    useEffect(() => {
+        if (msgs.length >= 1) {
+            let lastMsg = msgs[msgs.length - 1];
+            fetch('/api/location?' + new URLSearchParams({
+                location: lastMsg.place
+            }), {
+                method: 'GET',
+            }).then((res) => {
+                res.json().then((r) => {
+                    console.log('received ' + JSON.stringify(r));
+                    setEventLocations([...eventLocations, { lat: r.lat, long: r.long, date: lastMsg.date }])
+                })
+            }).catch((e) => {
+                console.log(e);
+                alert('Something went wrong with placing the map marker. Please wait a few seconds then retry.')
+            })
+        }
+    
+    }, [JSON.stringify(msgs)])
+
     function handleClickedChatItem(i: number) {
         setClickedChatItem(msgs[i]);
     }
@@ -39,7 +63,7 @@ export default function Chat( { setClickedChatItem }: Props ) {
         // FIX KEY
         return (
             <div className="w-full">
-                <p key={i} >[({msg.date}) <a href="#" onClick={() => handleClickedChatItem(i)} className="text-white">{msg.blurb}</a> ]</p>
+                <p key={i} >[({msg.date}, {msg.place}) <a href="#" onClick={() => handleClickedChatItem(i)} className="text-white">{msg.blurb}</a> ]</p>
             </div>
         )
     }
@@ -68,6 +92,7 @@ export default function Chat( { setClickedChatItem }: Props ) {
                 res.text().then((msg) => {
                     console.log(msg);
                     let graphItemMsg = openAIFormatToGraphItem(msg);
+                    console.log(graphItemMsg.place);
                     setMsgs([...msgs, graphItemMsg]);
                 });
 

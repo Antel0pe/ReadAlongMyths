@@ -2,8 +2,15 @@
 
 import { useMemo } from 'react';
 import dynamic from "next/dynamic";
+import { GraphItem } from '../utils/KnowledgeGraphItem';
+import { EventLocation } from '../utils/EventLocation';
 
-export default function MapView(props: any) {
+type Props = {
+    eventLocations: EventLocation[],
+}
+
+
+export default function MapView({ eventLocations }: Props) {
     const Map = useMemo(() => dynamic(
       () => import('@/app/components/Map'),
       { 
@@ -13,6 +20,6 @@ export default function MapView(props: any) {
     ), [])
   
     return (
-        <Map />
+        <Map eventLocations={eventLocations}/>
     )
   }
