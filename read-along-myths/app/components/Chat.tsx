@@ -4,6 +4,7 @@ import { Dispatch, MouseEventHandler, ReactElement, ReactFragment, useEffect, us
 import { GraphItem, graphItemToOpenAIFormat, openAIFormatToGraphItem } from "../utils/KnowledgeGraphItem";
 import { getNextChatItem, getNextOptionItems } from "../utils/KnowledgeGraphController";
 import { EventLocation } from "../utils/EventLocation";
+import { StartTimeline } from "./StartTimeline";
 
 type Props = {
     setClickedChatItem: Dispatch<GraphItem>,
@@ -14,6 +15,12 @@ type Props = {
 export default function Chat( { setClickedChatItem, eventLocations, setEventLocations }: Props ) {
     const [msgs, setMsgs] = useState<GraphItem[]>([]);
     const [optionItems, setOptionItems] = useState<GraphItem[]>([]);
+    
+    const [submittedUserDate, setSubmittedUserDate] = useState('');
+    const [submittedUserLocation, setSubmittedUserLocation] = useState('');
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+
 
     // get 1st msg in chat on load
     // useEffect(() => {
@@ -45,7 +52,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
             }).then((res) => {
                 res.json().then((r) => {
                     console.log('received ' + JSON.stringify(r));
-                    setEventLocations([...eventLocations, { lat: r.lat, long: r.long, date: lastMsg.date }])
+                    setEventLocations([...eventLocations, { lat: r.lat, long: r.long, date: lastMsg.date }]);
                 })
             }).catch((e) => {
                 console.log(e);
@@ -54,6 +61,31 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
         }
     
     }, [JSON.stringify(msgs)])
+
+    // when user submits a location + date, make req for 1st msg
+    useEffect(() => {
+        if (submittedUserLocation.length === 0 || submittedUserDate.length === 0) return;
+
+        fetch('/api/events?' + new URLSearchParams({
+            location: submittedUserLocation,
+            date: submittedUserDate,
+        }),
+        {
+            method: "GET"
+        }).then((res) => {
+            res.text().then((msg) => {
+                console.log(msg);
+                let graphItemMsg = openAIFormatToGraphItem(msg);
+                setMsgs([...msgs, graphItemMsg]);
+            });
+
+        })
+        .catch((err) => {
+            console.log(err);
+            alert('Something went wrong with Open AI...');
+        });
+
+    }, [isFormSubmitted])
 
     function handleClickedChatItem(i: number) {
         setClickedChatItem(msgs[i]);
@@ -68,16 +100,8 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
         )
     }
 
-    function addMsg(i: number) {
-        setMsgs([...msgs, getNextChatItem(optionItems[i])]);
-    }
-
     function getPrevMsg(): string {
-        if (msgs.length === 0) {
-            return '1774_philadelphia, USA_first continental congress met in philadelphia and passed the continental association';
-        } else {
-            return graphItemToOpenAIFormat(msgs[msgs.length - 1]);
-        }
+        return graphItemToOpenAIFormat(msgs[msgs.length - 1]);
     }
 
     function getNextOpenAIResponse() {
@@ -116,7 +140,9 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
                 }
             </div>
             <div className="w-full flex flex-row">
-                <button className="border-2 flex-grow" onClick={getNextOpenAIResponse}>Next</button>
+                <StartTimeline setSubmittedUserDate={setSubmittedUserDate} setSubmittedUserLocation={setSubmittedUserLocation} isFormSubmitted={isFormSubmitted} setIsFormSubmitted={setIsFormSubmitted}/>
+
+                <button className="border-2 flex-grow" onClick={getNextOpenAIResponse} hidden={!isFormSubmitted}>Next</button>
                 {/* {optionItems.length !== 0 && 
                     optionItems.map((o, i) => {
                         // FIX KEY

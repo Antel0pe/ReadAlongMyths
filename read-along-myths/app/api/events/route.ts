@@ -1,5 +1,5 @@
 import axios from "axios";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     let prevMsg = await request.json();
@@ -29,5 +29,37 @@ export async function POST(request: Request) {
             console.log(err);
             return new NextResponse(err);
         })
+}
+
+export async function GET(req: NextRequest) {
+    let location = req.nextUrl.searchParams.get('location');
+    let date = req.nextUrl.searchParams.get('date');
+
+    let prompt = 'i will give you a place and time in history in the following format: place_date. you will return a historical event of at least some significance that happened near that place, around that time in the following format: date_location_event that happened. Prioritize info that most closely matches the prompt. try to be very specific with the location. the prompt is: ' + location + '_' + date;
+
+    let data = {
+        "model": "gpt-4o-mini",
+        "messages": [
+            {
+                "role": "system",
+                "content": prompt
+            }
+        ]
+    };
+
+    let reqHeaders = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + process.env.OPENAI_KEY
+    }
+
+    return await axios.post('https://api.openai.com/v1/chat/completions',
+        data,
+        { headers: reqHeaders }
+    ).then((r) => {
+        return new NextResponse(r.data.choices[0].message.content);
+    }).catch((err) => {
+        console.log(err);
+        return new NextResponse(err);
+    })
 
 }
