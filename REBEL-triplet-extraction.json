@@ -1,0 +1,68 @@
+[
+    {
+        "initial text": "In 1526, Babur swept across the Khyber Pass and established the Mughal Empire, which at its zenith covered much of South Asia. However, his son Humayun was defeated by the Afghan warrior Sher Shah Suri in 1540, and Humayun was forced to retreat to Kabul. After Sher Shah's death, his son Islam Shah Suri and his Hindu general Hemu Vikramaditya established secular rule in North India from Delhi until 1556, when Akbar (r. 1556–1605), grandson of Babur, defeated Hemu in the Second Battle of Panipat on 6 November 1556 after winning Battle of Delhi. Akbar tried to establish a good relationship with the Hindus. Akbar declared \" Amari \" or non-killing of animals in the holy days of Jainism. He rolled back the jizya tax for non-Muslims. The Mughal emperors married local royalty, allied themselves with local maharajas, and attempted to fuse their Turko-Persian culture with ancient Indian styles, creating a unique Indo-Persian culture and Indo-Saracenic architecture. "
+    },
+    {
+        "head": "Sher Shah Suri",
+        "type": "child",
+        "tail": "Islam Shah Suri"
+    },
+    {
+        "head": "Islam Shah Suri",
+        "type": "father",
+        "tail": "Sher Shah Suri"
+    },
+    {
+        "head": "Sher Shah Suri",
+        "type": "child",
+        "tail": "Islam Shah Suri"
+    },
+    {
+        "head": "Sher Shah Suri",
+        "type": "child",
+        "tail": "Islam Shah Suri"
+    },
+    {
+        "head": "Islam Shah Suri",
+        "type": "father",
+        "tail": "Sher Shah Suri"
+    },
+    {
+        "head": "Islam Shah Suri",
+        "type": "child",
+        "tail": "Akbar"
+    },
+    {
+        "head": "Akbar",
+        "type": "father",
+        "tail": "Islam Shah Suri"
+    },
+    {
+        "initial text": "In 1806, Napoleon set up the Continental System to end British trade with French-controlled territories. However Britain had great industrial capacity and mastery of the seas. It built up economic strength through trade and the Continental System was largely ineffective. As Napoleon realized that extensive trade was going through Spain and Russia, he invaded those two countries. He tied down his forces in Spain, and lost very badly in Russia in 1812.[24] The Spanish uprising in 1808 at last permitted Britain to gain a foothold on the Continent. The Duke of Wellington and his army of British and Portuguese gradually pushed the French out of Spain, and in early 1814, as Napoleon was being driven back in the east by the Prussians, Austrians, and Russians, Wellington invaded southern France. After Napoleon's surrender and exile to the island of Elba, peace appeared to have returned, but when he escaped back into France in 1815, the British and their allies had to fight him again. The armies of Wellington and Blucher defeated Napoleon once and for all at Waterloo"
+    },
+    {
+        "head": "Spanish uprising in 1808",
+        "type": "point in time",
+        "tail": "1808"
+    },
+    {
+        "head": "Spain",
+        "type": "diplomatic relation",
+        "tail": "Russia"
+    },
+    {
+        "head": "Russia",
+        "type": "diplomatic relation",
+        "tail": "Spain"
+    },
+    {
+        "head": "Spain",
+        "type": "shares border with",
+        "tail": "Russia"
+    },
+    {
+        "head": "Russia",
+        "type": "shares border with",
+        "tail": "Spain"
+    }
+]
