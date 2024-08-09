@@ -6,7 +6,7 @@ import { EventLocation } from "../utils/EventLocation"
 type Props = {
     eventLocations: EventLocation[],
     zoomToNewestMarker: boolean,
-    linePositions: LatLngExpression[] | LatLngExpression[][],
+    linePositions: number[][] | number[][][],
 }
 
 export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePositions }: Props) {
@@ -31,6 +31,25 @@ export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePos
 
         return pos;
     }
+
+    function convertPositionsToLatLng() {
+        if (linePositions.length === 0) return [];
+
+        // does each item in the array, contain an array of nums
+        // have to check that each item is not an object because for whatever reason they are strings and not numbers???
+        if (linePositions.every((p) => p.every((i) => typeof(i) !== 'object'))) {
+            return linePositions.map((p) => {
+                return new LatLng(p[0], p[1])
+            })
+        } else {
+            return linePositions.map((p) => {
+                return [
+                    new LatLng(p[0][0], p[0][1]),
+                    new LatLng(p[1][0], p[1][1])
+                ]
+            })
+        }
+    }
     
     return (
         <>
@@ -42,7 +61,7 @@ export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePos
                 </Marker>
             })}
 
-            <Polyline positions={linePositions} pathOptions={{ color: 'black' }} />
+            <Polyline positions={convertPositionsToLatLng()} pathOptions={{ color: 'black' }} />
         </>
     )
 }

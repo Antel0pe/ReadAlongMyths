@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import MapView from "../components/MapView";
 import Slider from '@mui/material/Slider';
@@ -6,11 +6,10 @@ import Box from '@mui/material/Box';
 import earlyHumanMigrationModel from "../utils/earlyHumanMigrations";
 import { useEffect, useState } from "react";
 import { EventLocation } from "../utils/EventLocation";
-import { LatLngExpression, LatLng } from "leaflet";
 
 export default function Timeline() {
     const [displayedMarkers, setDisplayedMarkers] = useState<EventLocation[]>([]);
-    const [linePositions, setLinePositions] = useState<LatLngExpression[][]>([]);
+    const [linePositions, setLinePositions] = useState<number[][][]>([]);
     
     function onSliderChange(v: number | number[]) {
         let val = typeof (v) === 'number' ? Math.abs(v) : Math.abs(v[0]);
@@ -35,7 +34,7 @@ export default function Timeline() {
     }
 
     function drawLineForDisplayedDates(displayedDates: any[]) {
-        let lineOrigins: LatLng[][] = [];
+        let lineOrigins: number[][][] = [];
 
         for (let i = 0; i < displayedDates.length; i++){
             let originatingKey = displayedDates[i].origin;
@@ -45,9 +44,9 @@ export default function Timeline() {
 
             let originatingPoint = displayedDates.filter((i) => i.key === originatingKey)[0];
 
-            let line = [
-                new LatLng(originatingPoint.lat, originatingPoint.long),
-                new LatLng(displayedDates[i].lat, displayedDates[i].long)
+            let line: number[][] = [
+                [originatingPoint.lat, originatingPoint.long],
+                [displayedDates[i].lat, displayedDates[i].long]
             ];
 
             lineOrigins.push(line);

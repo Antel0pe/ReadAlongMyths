@@ -9,7 +9,7 @@ import { LatLngExpression } from 'leaflet';
 type Props = {
     eventLocations: EventLocation[],
     zoomToNewestMarker: boolean,
-    linePositions: LatLngExpression[] | LatLngExpression[][]
+    linePositions: number[][] | number[][][]
 }
 
 

@@ -8,7 +8,7 @@ import MapMarkers from "./MapMarkers";
 type Props = {
     eventLocations: EventLocation[],
     zoomToNewestMarker: boolean,
-    linePositions: LatLngExpression[] | LatLngExpression[][],
+    linePositions: number[][] | number[][][],
 }
 
 export default function Map({ eventLocations, zoomToNewestMarker, linePositions }: Props) {
