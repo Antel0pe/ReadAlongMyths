@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import MapView from "../components/MapView";
 import Slider from '@mui/material/Slider';
