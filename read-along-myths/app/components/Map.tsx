@@ -7,11 +7,13 @@ import MapMarkers from "./MapMarkers";
 
 type Props = {
     eventLocations: EventLocation[],
+    zoomToNewestMarker: boolean,
+    linePositions: LatLngExpression[] | LatLngExpression[][],
 }
 
-export default function Map({ eventLocations }: Props) {
-    const position: LatLngExpression = [40.0970507, -75.4696358];
-    const zoom: number = 5;
+export default function Map({ eventLocations, zoomToNewestMarker, linePositions }: Props) {
+    const position: LatLngExpression = [0, 0];
+    const zoom: number = 2;
 
     return (
         <MapContainer center={position} zoom={zoom} scrollWheelZoom={true} className="h-full">
@@ -20,7 +22,7 @@ export default function Map({ eventLocations }: Props) {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            <MapMarkers eventLocations={eventLocations} />
+            <MapMarkers eventLocations={eventLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={linePositions} />
 
         </MapContainer> 
     )

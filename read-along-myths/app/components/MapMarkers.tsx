@@ -5,14 +5,17 @@ import { EventLocation } from "../utils/EventLocation"
 
 type Props = {
     eventLocations: EventLocation[],
+    zoomToNewestMarker: boolean,
+    linePositions: LatLngExpression[] | LatLngExpression[][],
 }
 
-export default function MapMarkers({ eventLocations }: Props) {
+export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePositions }: Props) {
     const map = useMap();
 
     // zoom to newest marker every time new marker is added
     useEffect(() => {
         if (eventLocations.length === 0) return;
+        if (!zoomToNewestMarker) return;
 
         let lastEventLocation = eventLocations[eventLocations.length - 1];
         map.flyTo(new LatLng(lastEventLocation.lat, lastEventLocation.long));
@@ -35,11 +38,11 @@ export default function MapMarkers({ eventLocations }: Props) {
                 let pos: LatLngExpression = [loc.lat, loc.long];
 
                 return <Marker key={i} position={pos}>
-                    <Popup>{loc.date}</Popup>
+                    <Popup>{loc.text}</Popup>
                 </Marker>
             })}
-            
-            <Polyline positions={mapEventLocationsToPositions()} pathOptions={{ color: 'black' }} />
+
+            <Polyline positions={linePositions} pathOptions={{ color: 'black' }} />
         </>
     )
 }

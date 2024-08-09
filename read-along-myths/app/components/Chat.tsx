@@ -51,7 +51,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
                 method: 'GET',
             }).then((res) => {
                 res.json().then((r) => {
-                    setEventLocations([...eventLocations, { lat: r.lat, long: r.long, date: lastMsg.date }]);
+                    setEventLocations([...eventLocations, { lat: r.lat, long: r.long, text: lastMsg.date }]);
                 })
             }).catch((e) => {
                 console.log(e);
