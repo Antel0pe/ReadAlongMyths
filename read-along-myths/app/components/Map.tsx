@@ -1,17 +1,19 @@
 import { LatLng, LatLngExpression, MapOptions } from "leaflet";
-import { Dispatch, useEffect } from "react";
+import { Dispatch, ReactNode, useEffect } from "react";
 import { MapContainer, Marker, TileLayer, Tooltip, Popup, Polyline, useMap } from "react-leaflet";
 import { GraphItem } from "../utils/KnowledgeGraphItem";
 import { EventLocation } from "../utils/EventLocation";
 import MapMarkers from "./MapMarkers";
+import EditableMap from "./EditableMap";
 
 type Props = {
     eventLocations: EventLocation[],
     zoomToNewestMarker: boolean,
     linePositions: number[][] | number[][][],
+    children?: ReactNode,
 }
 
-export default function Map({ eventLocations, zoomToNewestMarker, linePositions }: Props) {
+export default function Map({ eventLocations, zoomToNewestMarker, linePositions, children }: Props) {
     const position: LatLngExpression = [0, 0];
     const zoom: number = 2;
 
@@ -23,6 +25,8 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions 
             />
 
             <MapMarkers eventLocations={eventLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={linePositions} />
+
+            { children }
 
         </MapContainer> 
     )
