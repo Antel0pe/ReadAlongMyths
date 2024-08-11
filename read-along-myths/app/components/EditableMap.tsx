@@ -2,15 +2,18 @@ import { useMap, useMapEvents } from "react-leaflet/hooks"
 import { EventLocation } from "../utils/EventLocation";
 import { Dispatch, useState } from "react";
 import { LatLng } from "leaflet";
+import findMarker from "../utils/EditableMapUtils";
+import EditableMapUtils from "../utils/EditableMapUtils";
 
 type Props = {
     eventLocations: EventLocation[],
     linePositions: number[][][],
     setDisplayedMarkers: Dispatch<EventLocation[]>,
     setLinePositions: Dispatch<number[][][]>,
+    setClickedMarker: Dispatch<EventLocation | null>,
 }
 
-export default function EditableMap({ eventLocations, linePositions, setDisplayedMarkers, setLinePositions }: Props) {
+export default function EditableMap({ eventLocations, linePositions, setDisplayedMarkers, setLinePositions, setClickedMarker }: Props) {
     const [prevClickedMarker, setPrevClickedMarker] = useState<LatLng | null>(null);
 
     const map = useMap();
@@ -31,6 +34,8 @@ export default function EditableMap({ eventLocations, linePositions, setDisplaye
             let popupLatLng = e.popup.getLatLng();
             if (!popupLatLng) return;
 
+            setClickedMarker(EditableMapUtils.findMarker(popupLatLng, eventLocations));
+
             if (prevClickedMarker === null) {
                 setPrevClickedMarker(popupLatLng);
             } else {
@@ -41,17 +46,13 @@ export default function EditableMap({ eventLocations, linePositions, setDisplaye
 
                 setPrevClickedMarker(null);
             }
-        },
+        }, popupclose: (e) => {
+            setClickedMarker(null);
+        }
 
     });
 
-    function removeMarker(marker: LatLng) {
-        setDisplayedMarkers(eventLocations.filter((e) => e.lat !== marker.lat && e.long !== marker.lng));
-    }
 
-    function removeAllPathsAssociatedWithMarker(marker: LatLng) {
-        
-    }
 
     return <></>;
 }
