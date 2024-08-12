@@ -1,0 +1,22 @@
+{
+    "time1": {
+        "markers": [
+            "latlong1",
+            "latlong2"
+        ],
+        "paths": [
+            "latlong_latlong",
+            "latlong_latlong"
+        ]
+    },
+    "time2": {
+        "markers": [
+            "latlong1",
+            "latlong2"
+        ],
+        "paths": [
+            "latlong_latlong",
+            "latlong_latlong"
+        ]
+    } 
+}

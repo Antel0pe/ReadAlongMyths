@@ -1,0 +1,8 @@
+Timeline JSON Format needs to:
+- tell what markers/paths are associated with a time 
+
+When editing/creating the map:
+- add marker/path with metadata and time associated
+- list all markers with time previous
+- delete markers
+- delete paths associated with marker

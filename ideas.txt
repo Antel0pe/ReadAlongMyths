@@ -1,0 +1,13 @@
+- lines with curves between markers
+- let lines show up slowly with timeline. not show marker + full path at certain year but show gradual progression of line similar to how human movement actually occurs
+--- isn't this just mapping certain portions of whole line segment to year?
+- show how Stonehenge moved. dots to show people and arrows showing stone movement
+- show flooding with blue highlight over areas then people moving away
+- refactor linepositions to include specific color
+- color lines by theme of event?
+- tag events by keywords?
+- add layers for different maps to be shown
+- output json of map
+- translate text into encoding with ai?
+- pathogen map?
+- json format similar to git to show what changed year to year not what happened at certain years
