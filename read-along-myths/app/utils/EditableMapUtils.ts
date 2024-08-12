@@ -1,7 +1,8 @@
 import { LatLng } from "leaflet";
 import { EventLocation } from "./EventLocation";
+import { TimelineEventLocation } from "./TimelineEventLocation";
 
-function findMarker(marker: LatLng, eventLocations: EventLocation[]) {
+function findMarker(marker: LatLng, eventLocations: TimelineEventLocation[]) {
     return eventLocations.filter((e) => e.lat === marker.lat && e.long === marker.lng)[0];
 }
 

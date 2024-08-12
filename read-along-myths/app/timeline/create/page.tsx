@@ -7,21 +7,25 @@ import MapView from '@/app/components/MapView';
 import earlyHumanMigrationModel from '@/app/utils/earlyHumanMigrations';
 import { EventLocation } from '@/app/utils/EventLocation';
 import EditableMap from '@/app/components/EditableMap';
+import { TimelineEventLocation } from '@/app/utils/TimelineEventLocation';
 
 export default function Timeline() {
-    const [displayedMarkers, setDisplayedMarkers] = useState<EventLocation[]>([]);
+    const [displayedMarkers, setDisplayedMarkers] = useState<TimelineEventLocation[]>([]);
     const [linePositions, setLinePositions] = useState<number[][][]>([]);
 
     const [textInput, setTextInput] = useState('');
+    const [timelineInput, setTimelineInput] = useState('');
 
-    const [clickedMarker, setClickedMarker] = useState<EventLocation | null>(null);
+    const [clickedMarker, setClickedMarker] = useState<TimelineEventLocation | null>(null);
 
-    // sync text with clicked/unclicked marker
+    // sync metadata with clicked/unclicked marker
     useEffect(() => {
         if (clickedMarker !== null) {
             setTextInput(clickedMarker?.text);
+            setTimelineInput(clickedMarker?.timeline.toString());
         } else {
             setTextInput('');
+            setTimelineInput('');
         }
     }, [clickedMarker])
 
@@ -76,6 +80,15 @@ export default function Timeline() {
                         <p>Text</p>
                         <input type='text' value={textInput} onChange={(e) => setTextInput(e.target.value)} className='text-black' disabled={clickedMarker === null} ></input>
                         <button type="button" className='border' onClick={changeTextOfMarker} >Submit </button>
+                    </div>
+                    <div className=''>
+                        <p>Timeline</p>
+                        <input type='text' value={timelineInput} onChange={(e) => setTimelineInput(e.target.value)} className='text-black' disabled={clickedMarker === null} ></input>
+                        <button type="button" className='border' onClick={() => {
+                            if (clickedMarker !== null) {
+                                clickedMarker.timeline = parseInt(timelineInput);
+                            }
+                        }}> Submit </button>
                     </div>
                     <div>
                     <button type="button" className='border' onClick={deleteClickedMarkerAndPaths} disabled={clickedMarker === null} >Delete Marker </button>

@@ -4,13 +4,14 @@ import { Dispatch, useState } from "react";
 import { LatLng } from "leaflet";
 import findMarker from "../utils/EditableMapUtils";
 import EditableMapUtils from "../utils/EditableMapUtils";
+import { TimelineEventLocation } from "../utils/TimelineEventLocation";
 
 type Props = {
-    eventLocations: EventLocation[],
+    eventLocations: TimelineEventLocation[],
     linePositions: number[][][],
-    setDisplayedMarkers: Dispatch<EventLocation[]>,
+    setDisplayedMarkers: Dispatch<TimelineEventLocation[]>,
     setLinePositions: Dispatch<number[][][]>,
-    setClickedMarker: Dispatch<EventLocation | null>,
+    setClickedMarker: Dispatch<TimelineEventLocation | null>,
 }
 
 export default function EditableMap({ eventLocations, linePositions, setDisplayedMarkers, setLinePositions, setClickedMarker }: Props) {
@@ -25,7 +26,8 @@ export default function EditableMap({ eventLocations, linePositions, setDisplaye
             setDisplayedMarkers([...eventLocations, {
                 lat: e.latlng.lat,
                 long: e.latlng.lng,
-                text: 'test'
+                text: 'test',
+                timeline: 0,
             }]);
         }, popupopen: (e) => {
             console.log('pop up opened!');
