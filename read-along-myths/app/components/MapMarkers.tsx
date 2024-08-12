@@ -49,6 +49,21 @@ export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePos
                 ]
             })
         }
+
+        // return [
+        //     {
+        //         latlng: [new LatLng(1, 1), new LatLng(2, 2)],
+        //         color: "green"
+        //     },
+        //     {
+        //         latlng: [new LatLng(3, 3), new LatLng(4, 4)],
+        //         color: "black"
+        //     },
+        //     {
+        //         latlng: [new LatLng(5, 5), new LatLng(6, 6)],
+        //         color: "blue"
+        //     }
+        // ]
     }
     
     return (
@@ -60,6 +75,10 @@ export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePos
                     <Popup>{loc.text}</Popup>
                 </Marker>
             })}
+            {/* {convertPositionsToLatLng().map((l) => {
+                return <Polyline positions={l.latlng} pathOptions={{ color: l.color }} />
+            }) */}
+
 
             <Polyline positions={convertPositionsToLatLng()} pathOptions={{ color: 'black' }} />
         </>

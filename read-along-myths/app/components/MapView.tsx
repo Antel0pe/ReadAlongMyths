@@ -24,6 +24,8 @@ export default function MapView({ eventLocations, zoomToNewestMarker, linePositi
     ), [])
   
     return (
-        <Map eventLocations={eventLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={linePositions} children={children} />
+        <Map eventLocations={eventLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={linePositions}>
+            {children}
+        </Map>
     )
   }
