@@ -1,0 +1,11 @@
+past few days, it's been very hard to continue making progress on this - really just am not feeling inspired or excited about the end goal right now. potentially just regular ol' getting bored with a project after having worked with it for a bit but maybe i should refocus on things i found more interesting
+
+- proto indo european language reconstruction
+    - this is super cool: https://en.wikipedia.org/wiki/File:IndoEuropeanTree.svg
+    - also this: https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Indo-European_migrations.jpg/2880px-Indo-European_migrations.jpg
+    - what about languages before proto indo european?
+- create a knowledge graph of history
+    - can start off simple with just a fancy "family tree" of roman emperors for example
+    - then add in dynasty, big things theyre associated with like Hadrian Wall
+- showing timelines of different histories together?
+    - show roman and greek history where they were at the same year ex. 400bc but also similar point in development? democracy/skirting with equality
