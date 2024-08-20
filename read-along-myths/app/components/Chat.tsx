@@ -18,6 +18,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     
     const [submittedUserDate, setSubmittedUserDate] = useState('');
     const [submittedUserLocation, setSubmittedUserLocation] = useState('');
+    const [submittedUserTopic, setSubmittedUserTopic] = useState('');
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
 
@@ -68,6 +69,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
         fetch('/api/events?' + new URLSearchParams({
             location: submittedUserLocation,
             date: submittedUserDate,
+            topic: submittedUserTopic,
         }),
         {
             method: "GET"
@@ -140,7 +142,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
                 }
             </div>
             <div className="w-full flex flex-row">
-                <StartTimeline setSubmittedUserDate={setSubmittedUserDate} setSubmittedUserLocation={setSubmittedUserLocation} isFormSubmitted={isFormSubmitted} setIsFormSubmitted={setIsFormSubmitted}/>
+                <StartTimeline setSubmittedUserDate={setSubmittedUserDate} setSubmittedUserLocation={setSubmittedUserLocation} isFormSubmitted={isFormSubmitted} setSubmittedUserTopic={setSubmittedUserTopic} setIsFormSubmitted={setIsFormSubmitted}/>
 
                 <button className="border-2 flex-grow" onClick={getNextOpenAIResponse} hidden={!isFormSubmitted}>Next</button>
                 {/* {optionItems.length !== 0 && 

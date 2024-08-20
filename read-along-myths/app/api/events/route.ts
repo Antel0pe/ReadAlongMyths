@@ -5,6 +5,7 @@ export async function POST(request: Request) {
     let prevMsg = await request.json();
     let data = {
         "model": "gpt-4o-mini",
+        // this isnt a conversation. can shorten?
         "messages": [
             {
                 "role": "system",
@@ -34,8 +35,9 @@ export async function POST(request: Request) {
 export async function GET(req: NextRequest) {
     let location = req.nextUrl.searchParams.get('location');
     let date = req.nextUrl.searchParams.get('date');
+    let topic = req.nextUrl.searchParams.get('topic');
 
-    let prompt = 'i will give you a place and time in history in the following format: place_date. you will return a historical event of at least some significance that happened near that place, around that time in the following format: date_location_event that happened. Prioritize info that most closely matches the prompt. try to be very specific with the location. the prompt is: ' + location + '_' + date;
+    let prompt = 'i will give you a place and time in history in the following format: place_date_topic. you will return a historical event of at least some significance that happened near that place, around that time that is related to that topic in the following format: date_location_event that happened. Prioritize info that most closely matches the prompt. try to be very specific with the location. the prompt is: ' + location + '_' + date  + '_' + topic;
 
     let data = {
         "model": "gpt-4o-mini",
