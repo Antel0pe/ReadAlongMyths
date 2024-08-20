@@ -74,15 +74,16 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
         {
             method: "GET"
         }).then((res) => {
-            res.text().then((msg) => {
-                console.log(msg);
-                let graphItemMsg = openAIFormatToGraphItem(msg);
+            res.json().then((json) => {
+                console.log(json);
+                let graphItemMsg = openAIFormatToGraphItem(json);
                 setMsgs([...msgs, graphItemMsg]);
             });
 
+
         })
         .catch((err) => {
-            console.log(err);
+            console.log(err.response);
             alert('Something went wrong with Open AI...');
         });
 
@@ -116,7 +117,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
             body: JSON.stringify(getPrevMsg())
         })
             .then((res) => {
-                res.text().then((msg) => {
+                res.json().then((msg) => {
                     console.log(msg);
                     let graphItemMsg = openAIFormatToGraphItem(msg);
                     setMsgs([...msgs, graphItemMsg]);
@@ -124,7 +125,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
 
             })
             .catch((err) => {
-                console.log(err);
+                console.log(err.response);
                 alert('Something went wrong with Open AI...');
             });
     }

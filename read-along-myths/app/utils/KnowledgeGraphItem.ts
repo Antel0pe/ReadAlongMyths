@@ -5,14 +5,13 @@ export interface GraphItem{
     blurb: string,
 }
 
-export function openAIFormatToGraphItem(res: string): GraphItem {
-    let split_res = res.split('_');
+export function openAIFormatToGraphItem(res: any): GraphItem {
 
     return {
         entity: 'placeholder',
-        date: split_res[1],
-        place: split_res[2],
-        blurb: split_res[3],
+        date: res.date,
+        place: res.location,
+        blurb: res.blurb,
     }
 }
 
