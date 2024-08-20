@@ -10,9 +10,9 @@ export function openAIFormatToGraphItem(res: string): GraphItem {
 
     return {
         entity: 'placeholder',
-        date: split_res[0],
-        place: split_res[1],
-        blurb: split_res[2],
+        date: split_res[1],
+        place: split_res[2],
+        blurb: split_res[3],
     }
 }
 

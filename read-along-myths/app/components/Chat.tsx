@@ -104,7 +104,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     }
 
     function getPrevMsg(): string {
-        return graphItemToOpenAIFormat(msgs[msgs.length - 1]);
+        return submittedUserTopic + '_' + graphItemToOpenAIFormat(msgs[msgs.length - 1]);
     }
 
     function getNextOpenAIResponse() {
