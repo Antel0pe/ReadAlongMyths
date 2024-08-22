@@ -1,0 +1,5 @@
+chatgpt simplify sentences to have 1 subject+object to make it easier for spacy to parse
+
+connect chatgpt to knowledge base of current entities and relations to see if any newly parsed can be combined/connected
+
+anything special for time based things?
