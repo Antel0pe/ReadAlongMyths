@@ -9,7 +9,7 @@ import ConnectionsPanel from "./components/ConnectionsPanel";
 import { EventLocation } from "./utils/EventLocation";
 
 export default function Home() {
-    const [clickedChatItem, setClickedChatItem] = useState<GraphItem>();
+    const [clickedChatItem, setClickedChatItem] = useState<EventLocation | undefined>();
     const [eventLocations, setEventLocations] = useState<EventLocation[]>([]);
     const [eventPositions, setEventPositions] = useState<number[][]>([]);
 
@@ -37,8 +37,9 @@ export default function Home() {
         <main className="h-full w-full"> {/*className="flex min-h-screen flex-col items-center justify-between p-24"> */}
             <section className="grid grid-rows-4 grid-cols-3 grid-flow-col gap-4 h-full">
               <div className="bg-blue-700 col-span-2 row-span-4">
-                    <MapView eventLocations={eventLocations} zoomToNewestMarker={true} linePositions={eventPositions} />
-
+                    {eventLocations && eventLocations.length > 0 && (
+                        <MapView eventLocations={eventLocations} zoomToNewestMarker={true} linePositions={eventPositions} clickedChatItem={clickedChatItem} />
+                    )}
               </div>
 
               <div className="bg-blue-700 row-span-4">

@@ -1,26 +1,30 @@
 import { LatLng, LatLngExpression, MapOptions } from "leaflet";
-import { Dispatch, useEffect } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { MapContainer, Marker, TileLayer, Tooltip, Popup, Polyline, useMap } from "react-leaflet";
 import { EventLocation } from "../utils/EventLocation"
+import { GraphItem } from "../utils/KnowledgeGraphItem";
+import { Slider } from "@mui/material";
 
 type Props = {
     eventLocations: EventLocation[],
     zoomToNewestMarker: boolean,
     linePositions: number[][] | number[][][],
+    clickedChatItem: EventLocation | undefined,
 }
 
-export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePositions }: Props) {
+export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem }: Props) {
     const map = useMap();
+    
 
-    // zoom to newest marker every time new marker is added
+
+    // zoom to newest marker and update displayed locations every time new marker is added
     useEffect(() => {
-        if (eventLocations.length === 0) return;
-        if (!zoomToNewestMarker) return;
+        if (zoomToNewestMarker) {
+            let lastEventLocation = eventLocations[eventLocations.length - 1];
+            map.flyTo(new LatLng(lastEventLocation.lat, lastEventLocation.long));
+        }
 
-        let lastEventLocation = eventLocations[eventLocations.length - 1];
-        map.flyTo(new LatLng(lastEventLocation.lat, lastEventLocation.long));
-
-    }, [eventLocations])
+    }, [eventLocations, zoomToNewestMarker, map])
 
     function mapEventLocationsToPositions() {
         let pos = [];
@@ -70,17 +74,16 @@ export default function MapMarkers({ eventLocations, zoomToNewestMarker, linePos
         <>
             {eventLocations.map((loc, i) => {
                 let pos: LatLngExpression = [loc.lat, loc.long];
-
-                return <Marker key={i} position={pos}>
-                    <Popup>{loc.text}</Popup>
-                </Marker>
+                return (
+                    <Marker key={i} position={pos}>
+                        <Popup>{loc.text}</Popup>
+                    </Marker>
+                );
             })}
-            {/* {convertPositionsToLatLng().map((l) => {
-                return <Polyline positions={l.latlng} pathOptions={{ color: l.color }} />
-            }) */}
-
 
             <Polyline positions={convertPositionsToLatLng()} pathOptions={{ color: 'black' }} />
+
+            
         </>
     )
 }

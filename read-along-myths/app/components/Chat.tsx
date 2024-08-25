@@ -7,7 +7,7 @@ import { EventLocation } from "../utils/EventLocation";
 import { StartTimeline } from "./StartTimeline";
 
 type Props = {
-    setClickedChatItem: Dispatch<GraphItem>,
+    setClickedChatItem: Dispatch<EventLocation>,
     eventLocations: EventLocation[],
     setEventLocations: Dispatch<EventLocation[]>,
 }
@@ -21,8 +21,8 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     const [submittedUserTopic, setSubmittedUserTopic] = useState('');
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-
-
+    const [isLoading, setIsLoading] = useState(false);
+    
     // get 1st msg in chat on load
     // useEffect(() => {
     //     setMsgs([getNextChatItem(null)]);
@@ -32,6 +32,12 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     // useEffect(() => {
     //     setOptionItems(getNextOptionItems(msgs[msgs.length-1]));
     // }, [msgs])
+
+    useEffect(() => {
+        if (isFormSubmitted) {
+            setIsLoading(true);
+        }
+    }, [isFormSubmitted]);
 
     // scroll into view when new msg added
     useEffect(() => {
@@ -57,7 +63,9 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
             }).catch((e) => {
                 console.log(e);
                 alert('Something went wrong with placing the map marker. Please wait a few seconds then retry.')
-            })
+            }).finally(() => {
+                setIsLoading(false);
+            });
         }
     
     }, [JSON.stringify(msgs)])
@@ -85,21 +93,42 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
         .catch((err) => {
             console.log(err.response);
             alert('Something went wrong with Open AI...');
+        })
+        .finally(() => {
+            setIsLoading(false);
         });
 
     }, [isFormSubmitted])
 
     function handleClickedChatItem(i: number) {
-        setClickedChatItem(msgs[i]);
+        const correspondingEventLocation = eventLocations[i];
+        setClickedChatItem({
+            lat: correspondingEventLocation?.lat,
+            long: correspondingEventLocation?.long,
+            text: msgs[i].blurb
+        });
     }
 
-    function msgFrag(msg: GraphItem, i: number): JSX.Element{
-        let backgroundColor = i % 2 === 0 ? 'bg-green-600 ' : 'bg-orange-700';
+    function msgFrag(msg: GraphItem, i: number): JSX.Element {
+        const backgroundColor = i % 2 === 0 ? 'bg-green-100' : 'bg-orange-100';
         
-        // FIX KEY
         return (
-            <div className={"w-full " + backgroundColor }>
-                <p key={i} >[({msg.date}, {msg.place}) <a href="#" onClick={() => handleClickedChatItem(i)} className="text-white">{msg.blurb}</a> ]</p>
+            <div className={`w-full p-4 rounded-lg shadow-md ${backgroundColor}`}>
+                <div className="flex flex-col space-y-2">
+                    <div className="flex justify-between text-sm text-gray-600">
+                        <span>{msg.date}</span>
+                        <span>{msg.place}</span>
+                    </div>
+                    <p className="text-lg font-medium">
+                        <a 
+                            href="#" 
+                            onClick={() => handleClickedChatItem(i)} 
+                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                        >
+                            {msg.blurb}
+                        </a>
+                    </p>
+                </div>
             </div>
         )
     }
@@ -109,6 +138,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     }
 
     function getNextOpenAIResponse() {
+        setIsLoading(true);
         // let temp = '1774_philadelphia, USA_first continental congress met in philadelphia and passed the continental association';
         // let openAIFormat = graphItemToOpenAIFormat(msgs[msgs.length - 1]);
         
@@ -117,43 +147,62 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
             body: JSON.stringify(getPrevMsg())
         })
             .then((res) => {
-                res.json().then((msg) => {
-                    console.log(msg);
-                    let graphItemMsg = openAIFormatToGraphItem(msg);
-                    setMsgs([...msgs, graphItemMsg]);
-                });
-
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then((msg) => {
+                console.log(msg);
+                let graphItemMsg = openAIFormatToGraphItem(msg);
+                setMsgs([...msgs, graphItemMsg]);
             })
             .catch((err) => {
-                console.log(err.response);
-                alert('Something went wrong with Open AI...');
+                console.error('Error:', err);
+                alert('An error occurred while fetching data. Please try again.');
             });
     }
 
     return (
-        <div className="relative h-full flex flex-col">
-            <div>
-            <h1>Chat</h1>
-            </div>
-            <div id="chat" className="overflow-y-scroll flex-grow h-0">
-                {msgs.map((m, i) => {
-                    return msgFrag(m, i);
-                })
+        <>
+            <div className="relative h-full flex flex-col">
+                <div>
+                    <h1>Chat</h1>
+                </div>
+                <div id="chat" className="overflow-y-scroll flex-grow h-0 p-4 space-y-4">
+                    {msgs.map((m, i) => (
+                        <div key={i} className="flex justify-end">
+                            <div className="max-w-3/4 bg-blue-500 text-white rounded-lg p-3 shadow-md">
+                                {msgFrag(m, i)}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="w-full flex flex-row">
+                    <StartTimeline setSubmittedUserDate={setSubmittedUserDate} setSubmittedUserLocation={setSubmittedUserLocation} isFormSubmitted={isFormSubmitted} setSubmittedUserTopic={setSubmittedUserTopic} setIsFormSubmitted={setIsFormSubmitted}/>
 
-                }
+                    <button 
+                        className="border-2 flex-grow" 
+                        onClick={getNextOpenAIResponse} 
+                        hidden={!isFormSubmitted}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                getNextOpenAIResponse();
+                            }
+                        }}
+                        tabIndex={0}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Loading...' : 'Next'}
+                    </button>
+                    {/* {optionItems.length !== 0 && 
+                        optionItems.map((o, i) => {
+                            // FIX KEY
+                            return <button key={i} className={"border-2 basis-1/3"} onClick={() => addMsg(i)}>{ o.blurb }</button>
+                        })
+                    } */}
+                </div>
             </div>
-            <div className="w-full flex flex-row">
-                <StartTimeline setSubmittedUserDate={setSubmittedUserDate} setSubmittedUserLocation={setSubmittedUserLocation} isFormSubmitted={isFormSubmitted} setSubmittedUserTopic={setSubmittedUserTopic} setIsFormSubmitted={setIsFormSubmitted}/>
-
-                <button className="border-2 flex-grow" onClick={getNextOpenAIResponse} hidden={!isFormSubmitted}>Next</button>
-                {/* {optionItems.length !== 0 && 
-                    optionItems.map((o, i) => {
-                        // FIX KEY
-                        return <button key={i} className={"border-2 basis-1/3"} onClick={() => addMsg(i)}>{ o.blurb }</button>
-                    })
-                } */}
-            </div>
-            
-        </div>
+        </>
     )
 }

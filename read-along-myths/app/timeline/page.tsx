@@ -59,7 +59,7 @@ export default function Timeline() {
         <main className="h-full w-full">
             <div className="bg-blue-700 h-full flex flex-col">
                 <div className="grow z-0">
-                    <MapView eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions}  />
+                    <MapView eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions}  clickedChatItem={undefined}/>
                     
                 </div>
                 <div className="h-20 z-10 m-auto w-5/6">
