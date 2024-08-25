@@ -11,7 +11,7 @@ type Props = {
     linePositions: number[][][],
     setDisplayedMarkers: Dispatch<TimelineEventLocation[]>,
     setLinePositions: Dispatch<number[][][]>,
-    setClickedMarker: Dispatch<TimelineEventLocation | null>,
+    setClickedMarker: Dispatch<TimelineEventLocation | undefined>,
 }
 
 export default function EditableMap({ eventLocations, linePositions, setDisplayedMarkers, setLinePositions, setClickedMarker }: Props) {
@@ -49,7 +49,7 @@ export default function EditableMap({ eventLocations, linePositions, setDisplaye
                 setPrevClickedMarker(null);
             }
         }, popupclose: (e) => {
-            setClickedMarker(null);
+            setClickedMarker(undefined);
         }
 
     });

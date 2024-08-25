@@ -17,11 +17,11 @@ export default function Timeline() {
     const [timelineInput, setTimelineInput] = useState('');
     const [deleteMarkerPath, setDeleteMarkerPath] = useState<string>('');
 
-    const [clickedMarker, setClickedMarker] = useState<TimelineEventLocation | null>(null);
+    const [clickedMarker, setClickedMarker] = useState<TimelineEventLocation | undefined>(undefined);
 
     // sync metadata with clicked/unclicked marker
     useEffect(() => {
-        if (clickedMarker !== null) {
+        if (clickedMarker) {
             setTextInput(clickedMarker?.text);
             setTimelineInput(clickedMarker?.timeline.toString());
             setDeleteMarkerPath(timelineEventString(clickedMarker));
@@ -37,7 +37,7 @@ export default function Timeline() {
     }
 
     function changeTextOfMarker() {
-        if (clickedMarker !== null) {
+        if (clickedMarker) {
             displayedMarkers.map((m) => {
                 if (m.lat === clickedMarker.lat && m.long === clickedMarker.long) {
                     m.text = textInput;
@@ -52,7 +52,7 @@ export default function Timeline() {
     }
 
     function deleteClickedMarkerAndPaths() {
-        if (clickedMarker !== null) {
+        if (clickedMarker) {
             setDisplayedMarkers(displayedMarkers.filter((e) => {
                 return !(e.lat === clickedMarker.lat && e.long === clickedMarker.long)
             }));
@@ -61,7 +61,7 @@ export default function Timeline() {
                 l.every((i) => i[0] !== clickedMarker.lat && i[1] !== clickedMarker.long)
             }));
 
-            setClickedMarker(null);
+            setClickedMarker(undefined);
         }
         
 
@@ -74,7 +74,7 @@ export default function Timeline() {
     // gross, clean up
     function deleteMarkerPathConnection(event: React.SyntheticEvent) {
         console.log('deleting')
-        if (clickedMarker !== null && deleteMarkerPath !== '') {
+        if (clickedMarker && deleteMarkerPath !== '') {
             let idx = parseInt(deleteMarkerPath.split('.')[0])
             let markerToDelete = displayedMarkers[idx];
 
@@ -97,7 +97,7 @@ export default function Timeline() {
         <main className="h-full w-full">
             <div className="bg-blue-700 grid grid-rows-10 grid-cols-10 grid-flow-col gap-4 h-full">{/* <div className="bg-blue-700 h-full flex flex-col"> */}
                 <div className="col-span-8 row-span-9 z-0">{/* <div className="grow z-0"> */}
-                    <MapView eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions} >
+                    <MapView clickedChatItem={clickedMarker} eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions} >
                         <EditableMap eventLocations={displayedMarkers} linePositions={linePositions} setDisplayedMarkers={setDisplayedMarkers} setLinePositions={setLinePositions} setClickedMarker={setClickedMarker} />
                     </MapView>
                 </div>
@@ -110,14 +110,14 @@ export default function Timeline() {
                     <p>Editor</p>
                     <div className=''>
                         <p>Text</p>
-                        <input type='text' value={textInput} onChange={(e) => setTextInput(e.target.value)} className='text-black' disabled={clickedMarker === null} ></input>
+                        <input type='text' value={textInput} onChange={(e) => setTextInput(e.target.value)} className='text-black' disabled={clickedMarker === undefined} ></input>
                         <button type="button" className='border' onClick={changeTextOfMarker} >Submit </button>
                     </div>
                     <div className=''>
                         <p>Timeline</p>
-                        <input type='text' value={timelineInput} onChange={(e) => setTimelineInput(e.target.value)} className='text-black' disabled={clickedMarker === null} ></input>
+                        <input type='text' value={timelineInput} onChange={(e) => setTimelineInput(e.target.value)} className='text-black' disabled={clickedMarker === undefined} ></input>
                         <button type="button" className='border' onClick={() => {
-                            if (clickedMarker !== null) {
+                            if (clickedMarker) {
                                 clickedMarker.timeline = parseInt(timelineInput);
                             }
                         }}> Submit </button>
@@ -125,7 +125,7 @@ export default function Timeline() {
                     <div className=''>
                         <p>Delete path to/from</p>
                         <select value={deleteMarkerPath} onChange={(e) => setDeleteMarkerPath(e.target.value)}>
-                            { clickedMarker !== null &&
+                            { clickedMarker &&
                                 displayedMarkers.filter((m) => m.lat !== clickedMarker.lat && m.long !== clickedMarker.long)
                                     .map((e, i) => {
                                         return <option key={e.lat+','+e.long}>{ i + '. ' + timelineEventString(e) }</option>
