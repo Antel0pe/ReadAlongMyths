@@ -46,7 +46,7 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
 
                 </MapContainer> 
 
-                <div className="h-16 bg-white p-4 rounded-lg shadow-md">
+                <div className="h-12 bg-white p-4 rounded-lg shadow-md">
                     <Slider
                         aria-label="Time slider"
                         defaultValue={0}
@@ -65,7 +65,7 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
 
                             setDisplayedLocations(eventLocations.slice(0, currentValue + 1));
                             setDisplayedLines(linePositions.slice(0, currentValue + 1));
-                            
+
                             setSliderValue(currentValue);
                         }}
                         sx={{ 
