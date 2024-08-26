@@ -34,7 +34,7 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
     return (
         <>
             <div className="h-full flex flex-col">
-                <MapContainer center={position} zoom={zoom} scrollWheelZoom={true} className="flex-grow">
+                <MapContainer center={position} zoom={zoom} scrollWheelZoom={true} className="flex-grow z-0">
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -46,7 +46,7 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
 
                 </MapContainer> 
 
-                <div className="h-12 bg-white p-4 rounded-lg shadow-md">
+                <div className="h-12 bg-white p-4 rounded-lg shadow-md overflow-hidden">
                     <Slider
                         aria-label="Time slider"
                         defaultValue={0}
@@ -55,6 +55,7 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
                             value: index,
                             label: eventLocations[index]?.text,
                         }))}
+                        size="small"
                         min={0}
                         max={eventLocations.length - 1}
                         value={sliderValue}
@@ -69,15 +70,11 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
                             setSliderValue(currentValue);
                         }}
                         sx={{ 
-                            zIndex: 1000,
-                            '& .MuiSlider-mark': {
-                                height: '8px',
-                                width: '1px',
-                                marginTop: '-3px',
-                            },
+                            zIndex: 100000,
                             '& .MuiSlider-markLabel': {
-                                top: '20px',
-                            }
+                                top: '-10px',
+                            },
+
                         }}
                     />
                 </div>
