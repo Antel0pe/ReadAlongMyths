@@ -36,14 +36,14 @@ export default function Home() {
     return (
         <main className="h-full w-full"> {/*className="flex min-h-screen flex-col items-center justify-between p-24"> */}
             <section className="grid grid-rows-4 grid-cols-3 grid-flow-col gap-4 h-full">
-              <div className="bg-blue-700 col-span-2 row-span-4">
-                    {eventLocations && eventLocations.length > 0 && (
+              <div className="h-full bg-blue-700 col-span-2 row-span-4">
+                    {/* {eventLocations && eventLocations.length > 0 && ( */}
                         <MapView eventLocations={eventLocations} zoomToNewestMarker={true} linePositions={eventPositions} clickedChatItem={clickedChatItem} />
-                    )}
+                    {/* )} */}
               </div>
 
               <div className="bg-blue-700 row-span-4">
-                    <Chat setClickedChatItem={setClickedChatItem} eventLocations={eventLocations} setEventLocations={setEventLocations} />
+                    <Chat setClickedChatItem={setClickedChatItem} displayedEventLocations={eventLocations} setDisplayedEventLocations={setEventLocations} />
 
 
               </div>

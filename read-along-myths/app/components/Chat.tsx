@@ -8,20 +8,69 @@ import { StartTimeline } from "./StartTimeline";
 
 type Props = {
     setClickedChatItem: Dispatch<EventLocation>,
-    eventLocations: EventLocation[],
-    setEventLocations: Dispatch<EventLocation[]>,
+    displayedEventLocations: EventLocation[],
+    setDisplayedEventLocations: Dispatch<EventLocation[]>,
 }
 
-export default function Chat( { setClickedChatItem, eventLocations, setEventLocations }: Props ) {
+export default function Chat( { setClickedChatItem, displayedEventLocations, setDisplayedEventLocations }: Props ) {
     const [msgs, setMsgs] = useState<GraphItem[]>([]);
     const [optionItems, setOptionItems] = useState<GraphItem[]>([]);
     
-    const [submittedUserDate, setSubmittedUserDate] = useState('');
-    const [submittedUserLocation, setSubmittedUserLocation] = useState('');
     const [submittedUserTopic, setSubmittedUserTopic] = useState('');
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const [displayedMsgs, setDisplayedMsgs] = useState<GraphItem[]>([]);
+    const [eventLocations, setEventLocations] = useState<EventLocation[]>([]);
+    const [isTyping, setIsTyping] = useState(false);
+
+    useEffect(() => {
+        console.log('msgs', msgs);
+        if (msgs.length > displayedMsgs.length) {
+            setIsTyping(true);
+            setDisplayedMsgs([...displayedMsgs, msgs[displayedMsgs.length]]);
+        };
+        
+    }, [msgs]);
+
+    useEffect(() => {
+        if (displayedMsgs.length < msgs.length) {
+            setTimeout(() => {
+                setDisplayedMsgs(prevDisplayed => [...prevDisplayed, msgs[prevDisplayed.length]]);
+            }, 1000); // Adjust this delay as needed
+        } else {
+            setIsTyping(false);
+            setIsLoading(false);
+        }
+    }, [displayedMsgs]);
+
+    useEffect(() => {
+        console.log('eventLocations', eventLocations);
+        if (eventLocations.length > displayedEventLocations.length) {
+            setDisplayedEventLocations([...displayedEventLocations, eventLocations[displayedEventLocations.length]]);
+        }
+    }, [eventLocations]);
+
+    useEffect(() => {
+        console.log('in loc');
+        console.log('displayedEventLocations', displayedEventLocations);
+        console.log('eventLocations', eventLocations);
+        if (displayedEventLocations.length < eventLocations.length) {
+            console.log('firing loc');
+            setTimeout(() => {
+                setDisplayedEventLocations([...displayedEventLocations, eventLocations[displayedEventLocations.length]]);
+            }, 1000); // Adjust this delay as needed
+        }
+    }, [displayedEventLocations]);
+
+
+    // useEffect(() => {
+    //     if (!isTyping && msgs.length > displayedMsgs.length) {
+    //         setDisplayedMsgs(msgs);
+    //     }
+    // }, [isTyping, msgs]);
+
     
     // get 1st msg in chat on load
     // useEffect(() => {
@@ -46,37 +95,39 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
             chat.scrollTop = chat.scrollHeight;
         }
 
-    }, [JSON.stringify(msgs)])
+    }, [displayedMsgs])
 
-    // update array of locations everytime msgs are updated
+    // update array of locations for all messages
     useEffect(() => {
         if (msgs.length >= 1) {
-            let lastMsg = msgs[msgs.length - 1];
-            fetch('/api/location?' + new URLSearchParams({
-                location: lastMsg.place
-            }), {
-                method: 'GET',
-            }).then((res) => {
-                res.json().then((r) => {
-                    setEventLocations([...eventLocations, { lat: r.lat, long: r.long, text: lastMsg.date }]);
-                })
-            }).catch((e) => {
-                console.log(e);
-                alert('Something went wrong with placing the map marker. Please wait a few seconds then retry.')
-            }).finally(() => {
-                setIsLoading(false);
-            });
+            const fetchLocations = async () => {
+                const newEventLocations = [];
+                for (const msg of msgs) {
+                    try {
+                        const res = await fetch('/api/location?' + new URLSearchParams({
+                            location: msg.place
+                        }), {
+                            method: 'GET',
+                        });
+                        const r = await res.json();
+                        newEventLocations.push({ lat: r.lat, long: r.long, text: msg.date });
+                    } catch (e) {
+                        console.log(e);
+                        alert('Something went wrong with placing a map marker. Please try again.');
+                    }
+                }
+                setEventLocations(newEventLocations);
+            };
+
+            fetchLocations();
         }
-    
-    }, [JSON.stringify(msgs)])
+    }, [msgs])
 
     // when user submits a location + date, make req for 1st msg
     useEffect(() => {
-        if (submittedUserLocation.length === 0 || submittedUserDate.length === 0) return;
+        if (!isFormSubmitted) return;
 
         fetch('/api/events?' + new URLSearchParams({
-            location: submittedUserLocation,
-            date: submittedUserDate,
             topic: submittedUserTopic,
         }),
         {
@@ -84,8 +135,19 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
         }).then((res) => {
             res.json().then((json) => {
                 console.log(json);
-                let graphItemMsg = openAIFormatToGraphItem(json);
-                setMsgs([...msgs, graphItemMsg]);
+
+                let newMsgs: GraphItem[] = [];
+                for (let i = 0; i < json.dates.length; i++) {
+                    let graphItemMsg = {    
+                        entity: 'placeholder',
+                        date: json.dates[i],
+                        place: json.latlongs[i],
+                        blurb: json.narration[i],
+                    }
+
+                    newMsgs.push(graphItemMsg);   
+                }
+                setMsgs([...msgs, ...newMsgs]);
             });
 
 
@@ -94,9 +156,6 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
             console.log(err.response);
             alert('Something went wrong with Open AI...');
         })
-        .finally(() => {
-            setIsLoading(false);
-        });
 
     }, [isFormSubmitted])
 
@@ -134,7 +193,7 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
     }
 
     function getPrevMsg(): string {
-        return submittedUserTopic + '_' + graphItemToOpenAIFormat(msgs[msgs.length - 1]);
+        return submittedUserTopic;
     }
 
     function getNextOpenAIResponse() {
@@ -170,16 +229,16 @@ export default function Chat( { setClickedChatItem, eventLocations, setEventLoca
                     <h1>Chat</h1>
                 </div>
                 <div id="chat" className="overflow-y-scroll flex-grow h-0 p-4 space-y-4">
-                    {msgs.map((m, i) => (
+                    {displayedMsgs.map((m, i) => (
                         <div key={i} className="flex justify-end">
                             <div className="max-w-3/4 bg-blue-500 text-white rounded-lg p-3 shadow-md">
-                                {msgFrag(m, i)}
+                                { msgFrag(m, i)}
                             </div>
                         </div>
                     ))}
                 </div>
                 <div className="w-full flex flex-row">
-                    <StartTimeline setSubmittedUserDate={setSubmittedUserDate} setSubmittedUserLocation={setSubmittedUserLocation} isFormSubmitted={isFormSubmitted} setSubmittedUserTopic={setSubmittedUserTopic} setIsFormSubmitted={setIsFormSubmitted}/>
+                    <StartTimeline isFormSubmitted={isFormSubmitted} setSubmittedUserTopic={setSubmittedUserTopic} setIsFormSubmitted={setIsFormSubmitted}/>
 
                     <button 
                         className="border-2 flex-grow" 

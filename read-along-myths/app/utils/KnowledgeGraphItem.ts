@@ -10,7 +10,7 @@ export function openAIFormatToGraphItem(res: any): GraphItem {
     return {
         entity: 'placeholder',
         date: res.date,
-        place: res.location,
+        place: res.latlongs,
         blurb: res.blurb,
     }
 }

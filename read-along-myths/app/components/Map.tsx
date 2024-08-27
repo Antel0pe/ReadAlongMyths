@@ -1,3 +1,5 @@
+'use client'
+
 import { LatLng, LatLngExpression, MapOptions } from "leaflet";
 import { Dispatch, ReactNode, useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, Tooltip, Popup, Polyline, useMap } from "react-leaflet";
@@ -39,8 +41,9 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-
-                    <MapMarkers eventLocations={displayedLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={displayedLines} clickedChatItem={clickedChatItem} />
+                    { displayedLocations.length > 0 && (
+                        <MapMarkers eventLocations={displayedLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={displayedLines} clickedChatItem={clickedChatItem} />
+                    )}
 
                     { children }
 

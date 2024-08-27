@@ -4,10 +4,11 @@ import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 
 const NextHistoricalEventResponse = z.object({
-    topic: z.string(),
-    date: z.string(),
-    location: z.string(),
-    blurb: z.string(),
+    // topic: z.string(),
+    dates: z.string().array().describe('dates for the events described in the narrative in the order they were talked about'),
+    // location: z.string().array().describe('an array of strings representing specific locations to drop pins on in order of they were talked about'),
+    latlongs: z.string().array().describe('specific, modern day locations for the events described in the narrative in the order they were talked about'),
+    narration: z.string().array().describe('a detailed, narrative style description of the historical event or civilization broken into chunks'),
 })
 
 export async function POST(request: Request) {
@@ -43,11 +44,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET(req: NextRequest) {
-    let location = req.nextUrl.searchParams.get('location');
-    let date = req.nextUrl.searchParams.get('date');
+    // let location = req.nextUrl.searchParams.get('location');
+    // let date = req.nextUrl.searchParams.get('date');
     let topic = req.nextUrl.searchParams.get('topic');
 
-    let prompt = 'i will give you a place and time in history in the following format: topic_location_date. you will return a historical event of at least some significance that happened near that place, around that time that is related to that topic with a short blurb describing what happened in the json format. Prioritize info that most closely matches the prompt. try to be very specific with the location. the prompt is: ' + topic + '_' + location + '_' + date;
+    let prompt = `Tell me about the following topic in a detailed, narrative style. Incorporate a sense of wonder and exploration, similar to a David Attenborough documentary. Imagine the audience is following along with an interactive map, where each key location or event you mention corresponds to a pin being dropped on the map. Provide the specific location name in the field for each event. The topic is: ${topic}.`;
 
     let data = {
         "model": "gpt-4o-mini",
