@@ -53,11 +53,8 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
     }, [eventLocations]);
 
     useEffect(() => {
-        console.log('in loc');
-        console.log('displayedEventLocations', displayedEventLocations);
         console.log('eventLocations', eventLocations);
         if (displayedEventLocations.length < eventLocations.length) {
-            console.log('firing loc');
             setTimeout(() => {
                 setDisplayedEventLocations([...displayedEventLocations, eventLocations[displayedEventLocations.length]]);
             }, 1000); // Adjust this delay as needed
@@ -101,16 +98,19 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
     useEffect(() => {
         if (msgs.length >= 1) {
             const fetchLocations = async () => {
-                const newEventLocations = [];
-                for (const msg of msgs) {
+                const newEventLocations: EventLocation[] = [];
+                for (let i = 0; i < msgs.length; i++) {
                     try {
-                        const res = await fetch('/api/location?' + new URLSearchParams({
+                        const msg = msgs[i];
+                        console.log(msg.place);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        const response = await fetch('/api/location?' + new URLSearchParams({
                             location: msg.place
                         }), {
                             method: 'GET',
                         });
-                        const r = await res.json();
-                        newEventLocations.push({ lat: r.lat, long: r.long, text: msg.date });
+                        const json = await response.json();
+                        newEventLocations.push({ lat: json.lat, long: json.long, text: msg.date });
                     } catch (e) {
                         console.log(e);
                         alert('Something went wrong with placing a map marker. Please try again.');
@@ -141,7 +141,7 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
                     let graphItemMsg = {    
                         entity: 'placeholder',
                         date: json.dates[i],
-                        place: json.latlongs[i],
+                        place: json.locations[i],
                         blurb: json.narration[i],
                     }
 
