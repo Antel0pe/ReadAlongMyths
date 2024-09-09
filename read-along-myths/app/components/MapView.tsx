@@ -12,11 +12,13 @@ type Props = {
     zoomToNewestMarker: boolean,
     linePositions: number[][] | number[][][],
     clickedChatItem: EventLocation | undefined,
+    sliderValue: number,
+    setSliderValue: Dispatch<number>,
     children?: ReactNode,
 }
 
 
-export default function MapView({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem, children }: Props) {
+export default function MapView({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem, sliderValue, setSliderValue, children }: Props) {
     const Map = useMemo(() => dynamic(
       () => import('@/app/components/Map'),
       { 
@@ -27,7 +29,9 @@ export default function MapView({ eventLocations, zoomToNewestMarker, linePositi
   
     return (
         <div className="w-full h-full">
-            <Map eventLocations={eventLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={linePositions} clickedChatItem={clickedChatItem}>
+            <Map eventLocations={eventLocations} zoomToNewestMarker={zoomToNewestMarker} linePositions={linePositions}
+              clickedChatItem={clickedChatItem} sliderValue={sliderValue} setSliderValue={setSliderValue}
+            >
                 {children}
             </Map>
         </div>

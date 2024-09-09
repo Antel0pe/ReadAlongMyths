@@ -10,9 +10,10 @@ type Props = {
     setClickedChatItem: Dispatch<EventLocation>,
     displayedEventLocations: EventLocation[],
     setDisplayedEventLocations: Dispatch<EventLocation[]>,
+    timelineSliderValue: number,
 }
 
-export default function Chat( { setClickedChatItem, displayedEventLocations, setDisplayedEventLocations }: Props ) {
+export default function Chat( { setClickedChatItem, displayedEventLocations, setDisplayedEventLocations, timelineSliderValue }: Props ) {
     const [msgs, setMsgs] = useState<GraphItem[]>([]);
     const [optionItems, setOptionItems] = useState<GraphItem[]>([]);
     
@@ -93,6 +94,18 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
         }
 
     }, [displayedMsgs])
+
+    useEffect(() => {
+        if (displayedMsgs.length > 0 && timelineSliderValue < displayedMsgs.length) {
+            const chatElement = document.getElementById('chat');
+            if (chatElement) {
+                const msgElement = chatElement.children[timelineSliderValue];
+                if (msgElement) {
+                    msgElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+    }, [timelineSliderValue]);
 
     // update array of locations for all messages
     useEffect(() => {

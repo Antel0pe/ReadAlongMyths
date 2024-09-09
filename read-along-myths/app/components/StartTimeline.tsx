@@ -28,7 +28,7 @@ export function StartTimeline({ setSubmittedUserTopic, isFormSubmitted, setIsFor
                         hidden={isFormSubmitted} 
                         value={userTopicValue} 
                         onChange={(e) => setUserTopicValue(e.target.value)}
-                        placeholder="Enter a historical topic to explore"
+                        placeholder="Enter a historical topic, period, and location"
                         required 
                         className="flex-grow text-black border-4 border-green-500 border-solid min-w-0 p-2" 
                         onKeyDown={(e) => {

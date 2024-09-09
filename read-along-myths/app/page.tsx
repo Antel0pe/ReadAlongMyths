@@ -13,6 +13,8 @@ export default function Home() {
     const [eventLocations, setEventLocations] = useState<EventLocation[]>([]);
     const [eventPositions, setEventPositions] = useState<number[][]>([]);
 
+    const [timelineSliderValue, setTimelineSliderValue] = useState<number>(0);
+
     useEffect(() => {
         let pos: number[][] = [];
 
@@ -38,12 +40,15 @@ export default function Home() {
             <section className="grid grid-rows-4 grid-cols-3 grid-flow-col gap-4 h-full">
               <div className="h-full bg-blue-700 col-span-2 row-span-4">
                     {/* {eventLocations && eventLocations.length > 0 && ( */}
-                        <MapView eventLocations={eventLocations} zoomToNewestMarker={true} linePositions={eventPositions} clickedChatItem={clickedChatItem} />
+                        <MapView eventLocations={eventLocations} zoomToNewestMarker={true} linePositions={eventPositions} clickedChatItem={clickedChatItem} 
+                            sliderValue={timelineSliderValue} setSliderValue={setTimelineSliderValue}/>
                     {/* )} */}
               </div>
 
               <div className="bg-blue-700 row-span-4">
-                    <Chat setClickedChatItem={setClickedChatItem} displayedEventLocations={eventLocations} setDisplayedEventLocations={setEventLocations} />
+                    <Chat setClickedChatItem={setClickedChatItem} displayedEventLocations={eventLocations} setDisplayedEventLocations={setEventLocations} 
+                        timelineSliderValue={timelineSliderValue}
+                    />
 
 
               </div>

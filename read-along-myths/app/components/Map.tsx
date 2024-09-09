@@ -13,17 +13,19 @@ type Props = {
     eventLocations: EventLocation[],
     zoomToNewestMarker: boolean,
     linePositions: number[][] | number[][][],
-    children?: ReactNode,
     clickedChatItem: EventLocation | undefined,
+    sliderValue: number,
+    setSliderValue: Dispatch<number>,
+    children?: ReactNode,
 }
 
-export default function Map({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem, children }: Props) {
+export default function Map({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem, sliderValue, setSliderValue, children }: Props) {
     const position: LatLngExpression = [0, 0];
     const zoom: number = 2;
 
     const [displayedLocations, setDisplayedLocations] = useState<EventLocation[]>(eventLocations);
     const [displayedLines, setDisplayedLines] = useState<number[][] | number[][][]>(linePositions);
-    const [sliderValue, setSliderValue] = useState<number>(0);
+    
 
     useEffect(() => {
         setSliderValue(eventLocations.length - 1);
