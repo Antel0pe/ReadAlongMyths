@@ -19,6 +19,8 @@ export default function Timeline() {
 
     const [clickedMarker, setClickedMarker] = useState<TimelineEventLocation | undefined>(undefined);
 
+    const [timelineSliderValue, setTimelineSliderValue] = useState<number>(0);
+
     // sync metadata with clicked/unclicked marker
     useEffect(() => {
         if (clickedMarker) {
@@ -97,7 +99,9 @@ export default function Timeline() {
         <main className="h-full w-full">
             <div className="bg-blue-700 grid grid-rows-10 grid-cols-10 grid-flow-col gap-4 h-full">{/* <div className="bg-blue-700 h-full flex flex-col"> */}
                 <div className="col-span-8 row-span-9 z-0">{/* <div className="grow z-0"> */}
-                    <MapView clickedChatItem={clickedMarker} eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions} >
+                    <MapView clickedChatItem={clickedMarker} eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions} 
+                        sliderValue={timelineSliderValue} setSliderValue={setTimelineSliderValue}
+                    >
                         <EditableMap eventLocations={displayedMarkers} linePositions={linePositions} setDisplayedMarkers={setDisplayedMarkers} setLinePositions={setLinePositions} setClickedMarker={setClickedMarker} />
                     </MapView>
                 </div>

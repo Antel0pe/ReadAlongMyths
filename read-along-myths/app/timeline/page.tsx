@@ -10,6 +10,8 @@ import { EventLocation } from "../utils/EventLocation";
 export default function Timeline() {
     const [displayedMarkers, setDisplayedMarkers] = useState<EventLocation[]>([]);
     const [linePositions, setLinePositions] = useState<number[][][]>([]);
+
+    const [timelineSliderValue, setTimelineSliderValue] = useState<number>(0);
     
     function onSliderChange(v: number | number[]) {
         let val = typeof (v) === 'number' ? Math.abs(v) : Math.abs(v[0]);
@@ -59,7 +61,9 @@ export default function Timeline() {
         <main className="h-full w-full">
             <div className="bg-blue-700 h-full flex flex-col">
                 <div className="grow z-0">
-                    <MapView eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions}  clickedChatItem={undefined}/>
+                    <MapView eventLocations={displayedMarkers} zoomToNewestMarker={false} linePositions={linePositions}  clickedChatItem={undefined} 
+                        sliderValue={timelineSliderValue} setSliderValue={setTimelineSliderValue}
+                    />
                     
                 </div>
                 <div className="h-20 z-10 m-auto w-5/6">
