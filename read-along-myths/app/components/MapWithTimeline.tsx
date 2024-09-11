@@ -19,7 +19,7 @@ type Props = {
     children?: ReactNode,
 }
 
-export default function Map({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem, sliderValue, setSliderValue, children }: Props) {
+export default function MapWithTimeline({ eventLocations, zoomToNewestMarker, linePositions, clickedChatItem, sliderValue, setSliderValue, children }: Props) {
     const position: LatLngExpression = [0, 0];
     const zoom: number = 2;
 
@@ -50,6 +50,39 @@ export default function Map({ eventLocations, zoomToNewestMarker, linePositions,
                     { children }
 
                 </MapContainer> 
+
+                <div className="h-12 bg-white p-4 rounded-lg shadow-md overflow-hidden">
+                    <Slider
+                        aria-label="Time slider"
+                        defaultValue={0}
+                        step={1}
+                        marks={eventLocations.map((_, index) => ({
+                            value: index,
+                            label: eventLocations[index]?.text,
+                        }))}
+                        size="small"
+                        min={0}
+                        max={eventLocations.length - 1}
+                        value={sliderValue}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={(value) => eventLocations[value]?.text || ''}
+                        onChange={(_, value) => {
+                            const currentValue = Array.isArray(value) ? value[0] : value;
+
+                            setDisplayedLocations(eventLocations.slice(0, currentValue + 1));
+                            setDisplayedLines(linePositions.slice(0, currentValue + 1));
+
+                            setSliderValue(currentValue);
+                        }}
+                        sx={{ 
+                            zIndex: 100000,
+                            '& .MuiSlider-markLabel': {
+                                top: '-10px',
+                            },
+
+                        }}
+                    />
+                </div>
             </div>
         </>
     )
