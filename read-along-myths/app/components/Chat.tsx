@@ -150,12 +150,12 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
                 console.log(json);
 
                 let newMsgs: GraphItem[] = [];
-                for (let i = 0; i < json.dates.length; i++) {
+                for (let i = 0; i < json.events.length; i++) {
                     let graphItemMsg = {    
                         entity: 'placeholder',
-                        date: json.dates[i],
-                        place: json.locations[i],
-                        blurb: json.narration[i],
+                        date: json.events[i].date,
+                        place: json.events[i].location,
+                        blurb: json.events[i].narration,
                     }
 
                     newMsgs.push(graphItemMsg);   
