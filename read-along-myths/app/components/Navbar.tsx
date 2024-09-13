@@ -18,11 +18,6 @@ const Navbar = () => {
                                     <p>Early Human Migration Timeline</p>
                                 </Link>
                             </li>
-                            <li>
-                                <Link href="/timeline/create">
-                                    <p>DIY Timeline</p>
-                                </Link>
-                            </li>
                         </ul>
                     </div>
                 </div>
