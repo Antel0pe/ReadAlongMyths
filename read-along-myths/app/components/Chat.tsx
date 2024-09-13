@@ -238,9 +238,7 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
     return (
         <>
             <div className="relative h-full flex flex-col">
-                <div>
-                    <h1>Chat</h1>
-                </div>
+
                 <div id="chat" className="overflow-y-scroll flex-grow h-0 p-4 space-y-4">
                     {displayedMsgs.map((m, i) => (
                         <div key={i} className="flex justify-end">
