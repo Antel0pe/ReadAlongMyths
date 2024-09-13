@@ -3,14 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 
-const NextHistoricalEventResponse = z.object({
-    // topic: z.string(),
-    dates: z.string().array().describe('dates for the events described in the narrative in the order they were talked about'),
-    // location: z.string().array().describe('an array of strings representing specific locations to drop pins on in order of they were talked about'),
-    locations: z.string().array().describe('specific, modern day locations for the events described in the narrative in the order they were talked about'),
-    narration: z.string().array().describe('a detailed, narrative style description of the historical event or civilization broken into chunks'),
-})
-
 const HistoricalEvent = z.object({
     date: z.string().describe('the date of the event described in the narrative'),
     // location: z.string().array().describe('an array of strings representing specific locations to drop pins on in order of they were talked about'),
@@ -60,7 +52,7 @@ export async function GET(req: NextRequest) {
     // let date = req.nextUrl.searchParams.get('date');
     let topic = req.nextUrl.searchParams.get('topic');
 
-    let prompt = `Tell me about the following topic in a detailed, narrative style. Talk about 4-5 key events or locations with about 1-3 sentences for each. Incorporate a sense of wonder and exploration, similar to a David Attenborough documentary. Imagine the audience is following along with an interactive map, where each key location or event you mention corresponds to a pin being dropped on the map. Provide the specific location name in the field for each event. The topic is: ${topic}.`;
+    let prompt = `Tell me about the following topic in a detailed, narrative style. Talk about 4-5 key events or locations with about 1-3 sentences for each. Incorporate a sense of wonder and exploration in your response. Imagine the audience is following along with an interactive map, where each key location or event you mention corresponds to a pin being dropped on the map. Provide the specific location name in the field for each event. The topic is: ${topic}.`;
 
     let data = {
         "model": "gpt-4o-mini",

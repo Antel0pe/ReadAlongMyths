@@ -51,7 +51,7 @@ export default function MapWithTimeline({ eventLocations, zoomToNewestMarker, li
 
                 </MapContainer> 
 
-                <div className="h-12 bg-white p-4 rounded-lg shadow-md overflow-hidden">
+                <div className="h-20 bg-white p-4 w-full rounded-lg shadow-md  place-self-center ">
                     <Slider
                         aria-label="Time slider"
                         defaultValue={0}
@@ -74,12 +74,11 @@ export default function MapWithTimeline({ eventLocations, zoomToNewestMarker, li
 
                             setSliderValue(currentValue);
                         }}
-                        sx={{ 
-                            zIndex: 100000,
-                            '& .MuiSlider-markLabel': {
-                                top: '-10px',
-                            },
-
+                        sx={{
+                            width: 11/12,
+                            display: 'block',
+                            mx: 'auto',
+                            my: 'auto'
                         }}
                     />
                 </div>
