@@ -15,6 +15,14 @@ const HistoricalEventsSequence = z.object({
     events: z.array(HistoricalEvent).describe('chronological list of events')
 })
 
+const api = axios.create({
+});
+
+api.interceptors.request.use(request => {
+    console.log('Starting Request', JSON.stringify(request, null, 2))
+    return request
+})
+
 export async function POST(request: Request) {
     let prevMsg = await request.json();
     let data = {
@@ -52,10 +60,14 @@ export async function GET(req: NextRequest) {
     // let date = req.nextUrl.searchParams.get('date');
     let topic = req.nextUrl.searchParams.get('topic');
 
-    let prompt = `Tell me about the following topic in a detailed, narrative style. Talk about 4-5 key events or locations with about 1-3 sentences for each. Incorporate a sense of wonder and exploration in your response. Imagine the audience is following along with an interactive map, where each key location or event you mention corresponds to a pin being dropped on the map. Provide the specific location name in the field for each event. The topic is: ${topic}.`;
+    // let prompt = `Tell me about the following topic in a detailed, narrative style. Talk about 4-5 key events or locations with about 1-3 sentences for each.
+    // Incorporate a sense of wonder and exploration in your response. Imagine the audience is following along with an interactive map, where each key location
+    // or event you mention corresponds to a pin being dropped on the map. Provide the specific location name in the field for each event. The topic is: ${topic}.`;
+
+    let prompt = `Please generate a list of 6 historical events each around 4-5 sentences based on the input phrase. The list of events should be clearly related to the topic and each other. The events should be chronologically after each other. The event dates should be listed in xxxx ad/bc format. The location names should be the specific modern day name in \"city, province, country\" format. Do NOT simply list facts. Focus on finding interesting connections between history and the present. Give new and interesting information and perspectives like how Athenian democracy is seen as the birthplace of modern democracy but was shockingly exclusionary. Include interesting anecdotes like how King George personal letters revealed that he feared the rise of American democracy would topple European monarchies. Tell a story and illustrate why history is so fascinating. Great examples of events for spread of democracy: Decolonization's Democratic Paradox: The wave of decolonization is often seen as a triumph of democracy, but it also exposed deep flaws in the system. Many newly independent nations adopted democratic constitutions almost identical to their former colonizers, only to slide into dictatorship within a decade. This pattern forced political scientists to reckon with democracy's cultural foundations, leading to ongoing debates about whether democracy can be effectively exported or must organically develop. Talk about how the input had developed, changed, influenced other events, and what its impact on present day is. The input is: ${topic}`;
 
     let data = {
-        "model": "gpt-4o-mini",
+        "model": "gpt-4o-2024-08-06",
         "messages": [
             {
                 "role": "system",
@@ -70,7 +82,7 @@ export async function GET(req: NextRequest) {
         "Authorization": "Bearer " + process.env.OPENAI_KEY
     }
 
-    return await axios.post('https://api.openai.com/v1/chat/completions',
+    return await api.post('https://api.openai.com/v1/chat/completions',
         data,
         { headers: reqHeaders }
     ).then((r) => {
