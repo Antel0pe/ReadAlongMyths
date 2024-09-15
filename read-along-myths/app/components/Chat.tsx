@@ -261,9 +261,9 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
                             }
                         }}
                         tabIndex={0}
-                        disabled={isLoading}
+                        disabled={true}
                     >
-                        {isLoading ? 'Loading...' : 'Next'}
+                        {isLoading ? 'Loading...' : 'Done'}
                     </button>
                     {/* {optionItems.length !== 0 && 
                         optionItems.map((o, i) => {
