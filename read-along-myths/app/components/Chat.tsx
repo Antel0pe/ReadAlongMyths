@@ -195,7 +195,7 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
                         <a 
                             href="#" 
                             onClick={() => handleClickedChatItem(i)} 
-                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                            className="text-black hover:text-blue-800 transition-colors duration-200"
                         >
                             {msg.blurb}
                         </a>
@@ -242,9 +242,7 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
                 <div id="chat" className="overflow-y-scroll flex-grow h-0 p-4 space-y-4">
                     {displayedMsgs.map((m, i) => (
                         <div key={i} className="flex justify-end">
-                            <div className="max-w-3/4 bg-blue-500 text-white rounded-lg p-3 shadow-md">
                                 { msgFrag(m, i)}
-                            </div>
                         </div>
                     ))}
                 </div>
@@ -252,7 +250,7 @@ export default function Chat( { setClickedChatItem, displayedEventLocations, set
                     <StartTimeline isFormSubmitted={isFormSubmitted} setSubmittedUserTopic={setSubmittedUserTopic} setIsFormSubmitted={setIsFormSubmitted}/>
 
                     <button 
-                        className="border-2 flex-grow" 
+                        className="border-2 flex-grow border-black text-black" 
                         onClick={getNextOpenAIResponse} 
                         hidden={!isFormSubmitted}
                         onKeyDown={(e) => {
